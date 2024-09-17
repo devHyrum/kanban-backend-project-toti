@@ -1,0 +1,108 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Task Management API",
+      "description": "API de gerenciamento de tarefas"
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "Operações relacionadas aos usuários"
+      },
+      {
+        "name": "Tasks",
+        "description": "Operações relacionadas às tarefas"
+      }
+    ],
+    "paths": {
+      "/users": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Lista todos os usuários",
+          "responses": {
+            "200": {
+              "description": "Lista de usuários"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Users"],
+          "summary": "Cria um novo usuário",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Informações do usuário",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Usuário criado"
+            }
+          }
+        }
+      },
+      "/tasks": {
+        "get": {
+          "tags": ["Tasks"],
+          "summary": "Lista todas as tarefas",
+          "responses": {
+            "200": {
+              "description": "Lista de tarefas"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Tasks"],
+          "summary": "Cria uma nova tarefa",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Informações da tarefa",
+              "schema": {
+                "$ref": "#/definitions/Task"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Tarefa criada"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "User": {
+        "required": ["name", "email", "description", "jobTitle", "roleId"],
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "description": { "type": "string" },
+          "jobTitle": { "type": "string" },
+          "roleId": { "type": "integer" }
+        }
+      },
+      "Task": {
+        "required": ["title", "description", "dueDate", "status", "priority", "userId", "categoryId", "taskListId"],
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "dueDate": { "type": "string" },
+          "status": { "type": "string" },
+          "priority": { "type": "integer" },
+          "userId": { "type": "integer" },
+          "categoryId": { "type": "integer" },
+          "taskListId": { "type": "integer" }
+        }
+      }
+    }
+  }
+  
