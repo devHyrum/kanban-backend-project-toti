@@ -8,7 +8,7 @@ const userPhotosPath = path.join(__dirname, '../uploads/user_photo')
 export const getUsers = async (req, res) => {
   try {
     const users = await User.getAll()
-    console.log('Usuários encontrados:', users)  // Verifique no terminal os dados retornados
+    console.log('Usuários encontrados:', users)
     res.json(users)
   } catch (error) {
     console.error('Erro ao buscar usuários:', error)
@@ -19,6 +19,7 @@ export const getUsers = async (req, res) => {
 export const getUserByID = async (req, res) => {
   try {
     const user = await User.getUser(req.params.id)
+    console.log('Usuário encontrado:', user)
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' })
     }
@@ -35,7 +36,7 @@ export const createUser = async (req, res) => {
     const user_photo = req.file ? req.file.filename : null 
 
     const result = await User.create(name, email, description, jobTitle, roleId, user_photo)
-    res.json({ message: 'Usuário criado com sucesso', userId: result.insertId })
+    res.json({ message: 'Usuário criado com sucesso', userId: { name, email, description, jobTitle, roleId, user_photo } })
   } catch (error) {
     res.status(500).json({ error: 'Erro ao criar usuário' })
   }
@@ -66,7 +67,7 @@ export const updateUser = async (req, res) => {
 
     // Atualize o usuário no banco de dados
     const result = await User.update(id, name, email, description, jobTitle, roleId, user_photo)
-    res.json({ message: 'Usuário atualizado com sucesso', userId: id})
+    res.json({ message: 'Usuário atualizado com sucesso', userId: { name, email, description, jobTitle, roleId, user_photo } })
   } catch (error) {
     res.status(500).json({ error: 'Erro ao atualizar usuário' })
   }
