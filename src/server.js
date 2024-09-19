@@ -6,9 +6,12 @@ import cors from 'cors'
 import { PORT } from './config/config.js'
 
 import userRoutes from './routes/userRoutes.js'
+// import rolesRoutes from './routes/rolesRoutes.js'
 // import taskRoutes from './routes/taskRoutes.js'
-// import categoryRoutes from './routes/categoryRoutes.js'
+// import taskCategoryRoutes from './routes/taskcategoriesRoutes.js'
 // import taskListRoutes from './routes/taskListRoutes.js'
+// import taskCommentsRoutes from './routes/taskCommentsRoutes.js'
+// import taskHistoryRoutes from './routes/taskHistoryRoutes.js'
 
 import {errorHandler} from './middlewares/errorMiddleware.js'
 
@@ -23,9 +26,12 @@ app.use(express.json())
 
 // Rotas
 app.use('/users', userRoutes)
+// app.use('/roles', rolesRoutes)
 // app.use('/tasks', upload.single('file'), manejarErrorArchivo, taskRoutes)
-// app.use('/categories', categoryRoutes)  
+// app.use('/task-categories', taskcategoryRoutes)  
 // app.use('/task-lists', taskListRoutes)
+// app.use('/task-Comments-Routes', taskCommentsRoutes)
+// app.use('/task-History-Routes', taskHistoryRoutes)
 
 // Middleware de tratamento de erros gerais
 app.use(errorHandler)
