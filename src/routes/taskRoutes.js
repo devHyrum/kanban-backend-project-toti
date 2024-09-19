@@ -10,4 +10,4 @@ router.get('/', taskController.getTasks)
 // router.put('/:id', upload.single('file'), taskController.updateTask)
 // router.delete('/:id', taskController.deleteTask)
 
-module.exports = router
+export default router;
