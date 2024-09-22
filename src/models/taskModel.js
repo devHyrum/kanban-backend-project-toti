@@ -42,15 +42,15 @@ export const Task = {
       LEFT JOIN categories ON tasks.category_id = categories.id
       LEFT JOIN task_lists ON tasks.task_list_id = task_lists.id
       WHERE 
-        users.id = ?
+        tasks.id = ?
     `, [id])
-    return task[0]
+    return task.length > 0 ? task[0] : null
   },
 
   createTask: async (title, description, dueDate, status, priority, userId, categoryId, taskListId, filePath) => {
     const result = await pool.query(
       'INSERT INTO tasks (title, description, due_date, status, priority, user_id, file_path, category_id, task_list_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, description, dueDate, status, priority, userId, filePath, categoryId, taskListId]  // Corrigido aqui a ordem dos parâmetros
+      [title, description, dueDate, status, priority, userId, filePath, categoryId, taskListId]
     )
     return result
   },
@@ -58,5 +58,21 @@ export const Task = {
   getIdFromName: async (table,name) =>{
     const [rows] = await pool.query(`SELECT id FROM ${table} WHERE name = ?`, [name])
     return rows.length ? rows[0].id : null
-  }
+  },
+
+  updateTask: async (id, title, description, dueDate, status, priority, userId, categoryId, taskListId, filePath) => {
+    const result = await pool.query(
+      'UPDATE tasks SET title = ?, description = ?, due_date = ?, status = ?, priority = ?, user_id = ?, file_path = ?, category_id = ?, task_list_id = ? WHERE id = ?',
+      [title, description, dueDate, status, priority, userId, filePath, categoryId, taskListId, id]
+    )
+    return result
+  },
+
+  deleteTask: async (id) => {
+    const result = await pool.query(
+      'DELETE FROM tasks WHERE id = ?',
+      [id]
+    )
+    return result
+  },
 }

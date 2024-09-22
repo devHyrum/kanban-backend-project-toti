@@ -11,7 +11,7 @@ import taskRoutes from './routes/taskRoutes.js'
 // import taskCategoryRoutes from './routes/taskcategoriesRoutes.js'
 // import taskListRoutes from './routes/taskListRoutes.js'
 // import taskCommentsRoutes from './routes/taskCommentsRoutes.js'
-// import taskHistoryRoutes from './routes/taskHistoryRoutes.js'
+import taskHistoryRoutes from './routes/taskHistoryRoutes.js'
 
 import { errorHandler } from './middlewares/errorMiddleware.js'
 
@@ -29,7 +29,7 @@ app.use('/tasks', taskRoutes)
 // app.use('/task-categories', taskcategoryRoutes)
 // app.use('/task-lists', taskListRoutes)
 // app.use('/task-Comments-Routes', taskCommentsRoutes)
-// app.use('/task-History-Routes', taskHistoryRoutes)
+app.use('/task-History-Routes', taskHistoryRoutes)
 
 // Middleware de tratamento de erros gerais
 app.use(errorHandler)

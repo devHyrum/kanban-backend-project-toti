@@ -91,6 +91,9 @@ export const deleteUser = async (req, res) => {
 
     // Delete o usuário do banco de dados
     const result = await User.delete(id)
+    if (!result) {
+      return res.status(404).json({ error: 'Usuario não encontrada' })
+    }
     res.json({ message: 'Usuário deletado com sucesso', userId: id })
   } catch (error) {
     res.status(500).json({ error: 'Erro ao deletar usuário' })
