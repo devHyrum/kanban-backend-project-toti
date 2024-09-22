@@ -1,13 +1,20 @@
 import express from 'express'
-import taskController from '../controllers/taskController.js'
-import upload from '../config/multer.js'
+import { createTask, getTaskById, getTasks,  } from '../controllers/taskControllers.js'
+import { uploadAnyFile } from '../config/multer.js'
+import { controlarErros } from '../helpers/controlarErros.js'
+
 
 const router = express.Router()
 
-router.post('/', upload.single('file'), taskController.createTask)
-router.get('/', taskController.getTasks)
-// router.get('/:id', taskController.getTaskById)
-// router.put('/:id', upload.single('file'), taskController.updateTask)
-// router.delete('/:id', taskController.deleteTask)
+router.get('/', getTasks)
+router.get('/:id', getTaskById)
+router.post('/', uploadAnyFile.single('file'), createTask, controlarErros)
+// router.put('/:id', editTask)
+// router.delete('/:id', deleteTask)
+
+router.get('*', (req, res) => res.end('..task/POST: Não existe a rota'))
+router.post('*', (req, res) => res.end('..task/GET: Não existe a rota'))
+router.put('*', (req, res) => res.end('..task/PUT: Não existe a rota'))
+router.delete('*', (req, res) => res.end('..task/DELETE: Não existe a rota'))
 
 export default router;

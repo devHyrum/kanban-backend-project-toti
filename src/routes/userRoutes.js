@@ -11,9 +11,9 @@ router.post('/', uploadImage.single('imagem'), createUser, controlarErros )
 router.put('/:id', uploadImage.single('imagem'), updateUser, controlarErros)
 router.delete('/:id/:name', deleteUser)
 
-router.get('*', (req, res) => res.end('POST: Não existe a rota'))
-router.post('*', (req, res) => res.end('GET: Não existe a rota'))
-router.put('*', (req, res) => res.end('PUT: Não existe a rota'))
-router.delete('*', (req, res) => res.end('DELETE: Não existe a rota'))
+router.get('*', (req, res) => res.end('..user/POST: Não existe a rota'))
+router.post('*', (req, res) => res.end('..user/GET: Não existe a rota'))
+router.put('*', (req, res) => res.end('..user/PUT: Não existe a rota'))
+router.delete('*', (req, res) => res.end('..user/DELETE: Não existe a rota'))
 
 export default router;

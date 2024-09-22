@@ -2,12 +2,28 @@ import { pool } from '../config/db.js'
 
 export const User = {
   getAll: async () => {
-    const [rows] = await pool.query('SELECT id, name, email, description, job_title, role_id, created_at, user_photo FROM users')
+    const [rows] = await pool.query('SELECT id, name, email, description, job_title, created_at, user_photo FROM users')
     return rows
   },
 
   getUser: async (id) => {
-    const [usuario] = await pool.execute('SELECT id, name, email, description, job_title, role_id, created_at, user_photo FROM users WHERE id = ?', [id])
+    const [usuario] = await pool.execute(`
+      SELECT 
+        users.id, 
+        users.name, 
+        users.email, 
+        users.description, 
+        users.job_title, 
+        users.created_at, 
+        users.user_photo, 
+        roles.role_name
+      FROM 
+        users 
+      JOIN 
+        roles ON users.role_id = roles.id
+      WHERE 
+        users.id = ?
+    `, [id])
     return usuario[0]
   },
 

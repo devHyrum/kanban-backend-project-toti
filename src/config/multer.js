@@ -31,7 +31,7 @@ export const uploadImage = multer({
 // Configuração de armazenamento para qualquer arquivo
 const storageAnyFile = multer.diskStorage({
   destination: function (req, file, cb)  {
-    cb(null, path.join(__dirname, '../uploads/user_photo'))
+    cb(null, path.join(__dirname, '../uploads/file_path'))
   },
   filename: function (req, file, cb)  {
     const nomeDoArquivo = `${Date.now()}-${file.originalname}`
