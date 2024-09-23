@@ -9,7 +9,7 @@ const router = express.Router()
 router.get('/', getTasks)
 router.get('/:id', getTaskById)
 router.post('/', uploadAnyFile.single('file'), createTask, controlarErros)
-router.put('/:userId/tasks/:taskId',uploadAnyFile.single('file'), editTask, controlarErros)
+router.put('/:myUserId/tasks/:taskId',uploadAnyFile.single('file'), editTask, controlarErros)
 router.delete('/:id', deleteTask)
 
 router.get('*', (req, res) => res.end('..task/POST: Não existe a rota'))

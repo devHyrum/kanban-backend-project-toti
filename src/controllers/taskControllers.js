@@ -81,19 +81,30 @@ const generateChangeDescription = (oldTask, newTask) => {
   if (oldTask.priority !== newTask.priority) {
     changes.push(`Prioridade alterada de '${oldTask.priority}' para '${newTask.priority}'`)
   }
+  if (oldTask.file_path !== newTask.file_path) {
+    changes.push(`Arquivo alterado de '${oldTask.file_path}' para '${newTask.file_path}'`)
+  }
+  if (oldTask.user_id !== newTask.user_id) {
+    changes.push(`Usuário responsável alterado de '${oldTask.user_id}' para '${newTask.user_id}'`)
+  }
+  if (oldTask.category_id !== newTask.category_id) {
+    changes.push(`Categoria alterada de '${oldTask.category_id}' para '${newTask.category_id}'`)
+  }
+  if (oldTask.task_list_id !== newTask.task_list_id) {
+    changes.push(`Lista de tarea alterada de '${oldTask.task_list_id}' para '${newTask.task_list_id}'`)
+  }
   
-  // Você pode adicionar outras comparações, como file_path, user_id, etc.
-
   return changes.join(', ')
 }
 
 export const editTask = async (req, res) => {
   try {
-    const { userId, taskId  } = req.params
-    const { title, description, due_date, status, priority, user_id, category_id, task_list_id } = req.body
+    const { myUserId, taskId  } = req.params
+    const { title, description, due_date, status, user_id, priority, category_id, task_list_id } = req.body
     const task_file = req.file ? req.file.filename : null
 
     // Buscar IDs para user_id, category_id e task_list_id com base no nome enviado
+    const userId = await Task.getIdFromName('users', user_id)
     const categoryId = await Task.getIdFromName('categories', category_id)
     const taskListId = await Task.getIdFromName('task_lists', task_list_id)
 
@@ -133,13 +144,13 @@ export const editTask = async (req, res) => {
     )
 
     // Gerar a descrição das mudanças
-    const changeDescription = generateChangeDescription(oldFild, { title, description, due_date, status, priority })
+    const changeDescription = generateChangeDescription(oldFild, { title, description, due_date, status, priority, task_file, user_id, category_id, task_list_id })
 
     // Se houver mudanças, gravar no histórico
     if (changeDescription) {
       await TaskHistory.recordHistory({
         task_id: taskId ,
-        changed_by: userId, // ID do usuário autenticado que fez a mudança
+        changed_by: myUserId, // ID do usuário autenticado que fez a mudança
         change_description: changeDescription
       })
     }

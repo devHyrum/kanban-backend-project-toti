@@ -1,5 +1,6 @@
 # Task Management App (Mini Trello)
 ![ERD](./public/ERD.png)
+
 Este é um aplicativo de gerenciamento de tarefas simples, inspirado no Trello, que permite criar, editar e organizar tarefas. Os usuários podem ser responsáveis por tarefas, adicionar categorias/tags, organizar tarefas em listas (como "para fazer", "em progresso", "concluído") e fazer upload de arquivos. Cada usuário tem um papel no sistema, como Admin ou Usuário comum.
 
 ## Funcionalidades

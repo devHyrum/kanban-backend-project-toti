@@ -8,7 +8,6 @@ const userPhotosPath = path.join(__dirname, '../uploads/user_photo')
 export const getUsers = async (req, res) => {
   try {
     const users = await User.getAll()
-    console.log('Usuários encontrados:', users)
     res.json(users)
   } catch (error) {
     console.error('Erro ao buscar usuários:', error)

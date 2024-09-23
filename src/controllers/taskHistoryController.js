@@ -1,6 +1,17 @@
 import { TaskHistory } from '../models/taskHistoryModel.js'
 
-export const getTaskHistory = async (req, res) => {
+export const getTaskHistory = async (req, res) =>{
+  try{
+    const historical = await TaskHistory.getHistory()
+    res.json(historical)
+  }
+  catch (error){
+    console.error('Erro ao buscar históricos:', error)
+    res.status(500).json({ error: 'Erro ao buscar históricos' })
+  }
+}
+
+export const getTaskHistorybyId = async (req, res) => {
   try {
     const { id } = req.params
 
