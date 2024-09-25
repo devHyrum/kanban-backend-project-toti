@@ -12,20 +12,24 @@ export const getTaskComments = async (req, res) => {
 export const getCommentsByTaskId = async (req, res) => {
     try{
         const comments = await TaskComment.getAllByTaskId(req.params.taskId);
+        if (!comments.length) {
+            return res.status(404).json({ error: 'Comentários não encontrados da task' })
+          }
         res.json(comments);
     }catch(error){
         res.status(500).json({erro: 'Erro ao buscar o comentário'})
     }
 };
 
-export const createComment = async (req, res) => {
+export const addTaskComments = async(req, res) => {
+    const { task_id, user_id, comment } = req.body; 
+    console.log('Dados recebidos:', req.body);
     try{
-        const { comment, userId } = req.body;
-        const taskId = req.params.taskId;
-        const result = await TaskComment.create(taskId, comment, userId);
-        res.status(201).json({ message: 'Comentario creado', commentId: result.insertId });
+        const addTaskComment = await TaskComment.addComment(task_id, user_id, comment)
+        res.json({message:'Comentário adicionado', comment: {task_id, user_id, comment}})
     }catch(error){
         res.status(500).json({erro: 'Erro ao adicionar comentário'})
+        throw error;
     }
 };
 

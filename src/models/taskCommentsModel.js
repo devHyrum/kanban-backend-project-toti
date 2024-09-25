@@ -3,7 +3,8 @@ import { pool } from '../config/db.js';
 const TaskComment = {
     getAllComments: async () =>{
         const query = `
-            SELECT tasks.title AS task_title,
+            SELECT task_comments.id AS id,
+                   tasks.title AS task_title,
                    tasks.description AS task_description,
                    task_comments.comment AS task_comment, 
                    users.name AS user_name
@@ -14,18 +15,16 @@ const TaskComment = {
         const[rows] = await pool.query(query)
         return rows
     },
-    
+
     getAllByTaskId: async (taskId) => {
         const [rows] = await pool.query('SELECT * FROM task_comments WHERE task_id = ?', [taskId]);
         return rows;
     },
 
-    create: async (taskId, comment, userId) => {
-        const [result] = await pool.query(
-            'INSERT INTO task_comments (task_id, comment, user_id, created_at) VALUES (?, ?, ?, NOW())',
-            [taskId, comment, userId]
-        );
-        return result;
+    addComment: async (task_id, user_id, comment) => {
+        const query = 'INSERT INTO task_comments (task_id, user_id, comment) VALUES (?,?,?)'
+        const[result] = await pool.query(query, [task_id, user_id, comment])
+        return result
     },
 
     delete: async (id) => {

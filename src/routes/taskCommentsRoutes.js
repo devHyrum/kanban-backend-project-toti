@@ -1,11 +1,15 @@
 import express from 'express';
-import * as taskCommentsController from '../controllers/taskCommentsController.js';
+import { addTaskComments, deleteComment, getCommentsByTaskId, getTaskComments } from '../controllers/taskCommentsController.js';
 
 const router = express.Router();
 
-router.get('/', taskCommentsController.getTaskComments);
-router.get('/:taskId/comments', taskCommentsController.getCommentsByTaskId);
-router.post('/:taskId/comments', taskCommentsController.createComment);
-router.delete('/comments/:id', taskCommentsController.deleteComment);
+router.get('/', getTaskComments);
+router.get('/:taskId', getCommentsByTaskId);
+router.post('/', addTaskComments);
+router.delete('/:id', deleteComment);
+
+router.get('*', (req, res) => res.end('..taskComments/POST: Não existe a rota'))
+router.post('*', (req, res) => res.end('..taskComments/GET: Não existe a rota'))
+router.delete('*', (req, res) => res.end('..taskComments/DELETE: Não existe a rota'))
 
 export default router;

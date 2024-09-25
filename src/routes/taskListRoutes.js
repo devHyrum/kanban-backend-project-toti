@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.get('/', taskListController.getTaskList)
 
+router.get('*', (req, res) => res.end('..taskList/GET: Não existe a rota'))
+
 export default router;
