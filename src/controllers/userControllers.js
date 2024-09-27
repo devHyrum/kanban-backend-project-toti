@@ -1,5 +1,5 @@
 import { User } from '../models/userModel.js'
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
 import { __dirname } from '../utils/utils.js'
 
@@ -18,7 +18,7 @@ export const getUsers = async (req, res) => {
 export const getUserByID = async (req, res) => {
   try {
     const user = await User.getUser(req.params.id)
-    console.log('Usuário encontrado:', user)
+    console.log('Usuário encontrado:', user)  
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' })
     }
@@ -75,20 +75,16 @@ export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params
 
-    // Obtenha o usuário para saber qual foto está associada
     const user = await User.getUser(id)
 
-    // Se houver uma foto associada, exclua-a
     if (user.user_photo) {
       const photoPath = path.join(userPhotosPath, user.user_photo)
 
-      // Verifique se o arquivo existe e exclua-o
-      if (fs.existsSync(photoPath)) { // verificar oi motivo de não funcioanr
+      if (fs.existsSync(photoPath)) {
         fs.unlinkSync(photoPath)
       }
     }
 
-    // Delete o usuário do banco de dados
     const result = await User.delete(id)
     if (!result) {
       return res.status(404).json({ error: 'Usuario não encontrada' })
@@ -96,5 +92,33 @@ export const deleteUser = async (req, res) => {
     res.json({ message: 'Usuário deletado com sucesso', userId: id })
   } catch (error) {
     res.status(500).json({ error: 'Erro ao deletar usuário' })
+  }
+}
+
+export const getImagen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.getUser(id);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    const photoName = user.user_photo;
+    if (!photoName) {
+      return res.status(404).json({ message: 'Imagem não cadastrada para este usuário' });
+    }
+
+    const imagePath = path.join(userPhotosPath, photoName); 
+
+    try {
+      await fs.access(imagePath, fs.constants.F_OK); 
+      return res.sendFile(imagePath); 
+    } catch (err) {
+      return res.status(404).json({ message: 'Imagem não encontrada' });
+    }
+
+  } catch (error) {
+    return res.status(500).json({ error: 'Erro ao buscar o usuário' });
   }
 }
