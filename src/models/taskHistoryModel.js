@@ -2,7 +2,7 @@ import { pool } from '../config/db.js'
 
 export const TaskHistory = {
   getHistory: async () => {
-    const [historical] = await pool.query('SELECT id, name, email, description, job_title, created_at, user_photo FROM users')
+    const [historical] = await pool.query('SELECT id, task_id, changed_by, change_description, created_at FROM task_history')
       return historical
   },
   getHistoryByTaskId: async (taskId) => {

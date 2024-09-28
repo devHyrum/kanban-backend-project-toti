@@ -29,38 +29,49 @@ export const getTaskById = async (req, res) => {
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, due_date, status, priority, user_id, category_id, task_list_id } = req.body
-    const task_file = req.file ? req.file.filename : null
+    const { title, description, due_date, status, priority, user_id, category_id, task_list_id } = req.body;
+    console.log(req.body); // Log dos dados recebidos no backend
 
-    // Buscar IDs para user_id, category_id e task_list_id com base no nome enviado
-    const userId = await Task.getIdFromName('users', user_id)
-    const categoryId = await Task.getIdFromName('categories', category_id)
-    const taskListId = await Task.getIdFromName('task_lists', task_list_id)
+    if (!title || title.trim() === '') {
+      return res.status(400).json({ error: 'O título da tarefa é obrigatório' });
+    }
 
-    // Se algum dos IDs não foi encontrado, retornar um erro
-    if (!userId || !categoryId || !taskListId) {
-      return res.status(400).json({ error: 'Usuário, Categoria ou Lista de Tarefas inválidos' })
+    const task_file = req.file ? req.file.filename : null;
+
+    // Verifica se o user_id e o category_id foram enviados; se não, atribuir null
+    const userId = user_id ? await Task.getIdFromName('users', user_id) : null;
+    const categoryId = category_id ? await Task.getIdFromName('categories', category_id) : null;
+    
+    // Se task_list_id não for enviado ou for vazio, atribuir 'Para fazer'
+    const taskListId = task_list_id ? await Task.getIdFromName('task_lists', task_list_id) : await Task.getIdFromName('task_lists', 'Para fazer');
+
+    // Se o taskListId não foi encontrado, retornar um erro
+    if (!taskListId) {
+      return res.status(400).json({ error: 'Lista de Tarefas inválida' });
     }
 
     // Criar a nova tarefa com os IDs obtidos
     const updatedTask = await Task.createTask(
-      title, 
-      description, 
-      due_date, 
-      status, 
-      priority, 
-      userId, 
-      categoryId, 
-      taskListId, 
-      task_file,
-    )
+      title,
+      description,
+      due_date,
+      status,
+      priority,
+      userId,        // Pode ser null
+      categoryId,    // Pode ser null
+      taskListId,    // Sempre terá um valor válido
+      task_file
+    );
 
-    res.json({ message: 'Task criada com sucesso', taskId: { title, description, due_date, status, priority, userId, categoryId, taskListId, task_file, } })
+    res.json({
+      message: 'Task criada com sucesso',
+      task: { title, description, due_date, status, priority, userId, categoryId, taskListId, task_file },
+    });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Erro ao criar a tarefa' })
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao criar a tarefa' });
   }
-}
+};
 
 // Função para gerar a descrição das mudanças
 const generateChangeDescription = (oldTask, newTask) => {
@@ -102,7 +113,9 @@ export const editTask = async (req, res) => {
     const { myUserId, taskId  } = req.params
     const { title, description, due_date, status, user_id, priority, category_id, task_list_id } = req.body
     const task_file = req.file ? req.file.filename : null
-
+    console.log(req.params)
+    console.log(title, description, due_date, status, user_id, priority, category_id, task_list_id)
+    
     // Buscar IDs para user_id, category_id e task_list_id com base no nome enviado
     const userId = await Task.getIdFromName('users', user_id)
     const categoryId = await Task.getIdFromName('categories', category_id)

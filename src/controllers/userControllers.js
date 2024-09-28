@@ -18,7 +18,6 @@ export const getUsers = async (req, res) => {
 export const getUserByID = async (req, res) => {
   try {
     const user = await User.getUser(req.params.id)
-    console.log('Usuário encontrado:', user)  
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' })
     }

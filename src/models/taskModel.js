@@ -32,10 +32,10 @@ export const Task = {
         tasks.status,
         tasks.priority,
         tasks.file_path,
-        users.name AS user_name, 
+        users.name AS user_id, 
         users.user_photo, 
-        categories.name AS category_name, 
-        task_lists.name AS task_list_name
+        categories.name AS category_id, 
+        task_lists.name AS task_list_id
       FROM 
         tasks
       LEFT JOIN users ON tasks.user_id = users.id
