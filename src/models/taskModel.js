@@ -5,10 +5,12 @@ export const Task = {
     const [rows] = await pool.query(`
       SELECT 
         tasks.id, 
-        tasks.title, 
+        tasks.title,
+        tasks.description,
         tasks.due_date, 
         tasks.status, 
         tasks.priority, 
+        tasks.user_id, 
         users.name AS user_name, 
         users.user_photo, 
         categories.name AS category_name, 
