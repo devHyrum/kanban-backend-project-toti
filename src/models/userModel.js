@@ -35,12 +35,23 @@ export const User = {
     return result
   },
   
-  update: async (id, name, email, description, jobTitle, roleId, user_photo) => {
-    const result = await pool.query(
-      'UPDATE users SET name = ?, email = ?, description = ?, job_title = ?, role_id = ?, user_photo = ? WHERE id = ?',
-      [name, email, description, jobTitle, roleId, user_photo, id]
-    )
-    return result
+  update: async (id, fieldsToUpdate) => {
+    // Construa dinamicamente a query e os valores a serem atualizados
+    const updates = [];
+    const values = [];
+  
+    for (const field in fieldsToUpdate) {
+      updates.push(`${field} = ?`);
+      values.push(fieldsToUpdate[field]);
+    }
+  
+    values.push(id); // Adiciona o ID ao final para a condição WHERE
+  
+    const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+    // console.log('Query gerada:', query);
+    // console.log('Valores:', values);
+    const result = await pool.query(query, values);
+    return result;
   },
   
   delete: async (id) => {

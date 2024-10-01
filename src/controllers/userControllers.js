@@ -44,27 +44,36 @@ export const updateUser = async (req, res) => {
     const { id } = req.params
     const { name, email, description, jobTitle, roleId } = req.body
     const user_photo = req.file ? req.file.filename : null
+    // Obtenha o usuário atual para comparar o que mudou
+    const oldUser = await User.getUser(id);
 
-    // Se houver uma nova imagem e um id fornecido, delete a imagem antiga
-    if (user_photo) {
-      // Primeiro, obtenha o usuário para saber a foto atual
-      const oldUser = await User.getUser(id)
-
-      // Se o usuário já tiver uma foto e for diferente da nova
-      if (oldUser.user_photo && oldUser.user_photo !== user_photo) {
-        // Caminho completo do arquivo antigo
-        const oldPhotoPath = path.join(userPhotosPath, oldUser.user_photo)
-        
-        // Verifique se o arquivo antigo existe e delete-o
-        if (fs.existsSync(oldPhotoPath)) {
-          fs.unlinkSync(oldPhotoPath)
-        }
+    // Lógica para deletar a imagem antiga se uma nova imagem for enviada
+    if (user_photo && oldUser.user_photo && oldUser.user_photo !== user_photo) {
+      const oldPhotoPath = path.join(userPhotosPath, oldUser.user_photo);
+      try {
+        await fs.access(oldPhotoPath);
+        await fs.unlink(oldPhotoPath);
+      } catch (error) {
+        console.error('Erro ao deletar imagem antiga:', error);
       }
     }
 
-    // Atualize o usuário no banco de dados
-    const result = await User.update(id, name, email, description, jobTitle, roleId, user_photo)
-    res.json({ message: 'Usuário atualizado com sucesso', userId: { name, email, description, jobTitle, roleId, user_photo } })
+    // Monta os campos que precisam ser atualizados dinamicamente
+    const fieldsToUpdate = {};
+    if (name) fieldsToUpdate.name = name;
+    if (email) fieldsToUpdate.email = email;
+    if (description) fieldsToUpdate.description = description;
+    if (jobTitle) fieldsToUpdate.job_title = jobTitle;
+    if (roleId) fieldsToUpdate.role_id = roleId;
+    if (user_photo) fieldsToUpdate.user_photo = user_photo;
+
+    // Só atualiza se houver campos para modificar
+    if (Object.keys(fieldsToUpdate).length > 0) {
+      await User.update(id, fieldsToUpdate);
+      res.json({ message: 'Usuário atualizado com sucesso', userId: { ...oldUser, ...fieldsToUpdate } });
+    } else {
+      res.status(400).json({ message: 'Nenhum campo para atualizar' });
+    }
   } catch (error) {
     res.status(500).json({ error: 'Erro ao atualizar usuário' })
   }
