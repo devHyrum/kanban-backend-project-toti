@@ -2,6 +2,7 @@
 ![ERD](./public/ERD.png)
 
 Este é um aplicativo de gerenciamento de tarefas simples, inspirado no Trello, que permite criar, editar e organizar tarefas. Os usuários podem ser responsáveis por tarefas, adicionar categorias/tags, organizar tarefas em listas (como "para fazer", "em progresso", "concluído") e fazer upload de arquivos. Cada usuário tem um papel no sistema, como Admin ou Usuário comum.
+Aqui esta o [link do Front-End](https://github.com/devHyrum/kanban-frontend-project-toti)
 
 ## Funcionalidades
 - **Gerenciamento de Tarefas**: Criação, edição e organização de tarefas.
@@ -65,45 +66,3 @@ Após iniciar o servidor, você pode acessar a documentação da API gerada pelo
 ```bash
 http://localhost:3000/api-docs
 ```
-## Trabalhando no Projeto
-
-### Acessar sua branch específica
-Cada um de vocês tem uma branch designada. Use o comando abaixo para mudar para a sua branch.
-
-#### Companheiro 1 - José
-```bash
-git checkout jose
-```
-#### Companheiro 2 - Hyrum
-```bash
-git checkout hyrum
-```
-### Sincronizar as alterações
-Sempre que quiser sincronizar suas alterações com o repositório remoto, siga os passos abaixo:
-
-1. Primeiro, adicione os arquivos modificados:
-```bash
-git add .
-```
-2. Faça o commit das suas alterações:
-```bash
-git commit -m "Descrição das alterações"
-```
-3. Envie suas alterações para a branch remota:
-```bash
-git push origin sua-branch
-```
-Substitua `sua-branch` pelo nome da sua branch (ex.: `jose`, `hyrum`).
-
-### Para verificar em qual branch você está
-Você pode verificar a branch atual a qualquer momento com o comando:
-```bash
-git branch
-```
-### Atualizar a branch com as mudanças do repositório remoto
-Sempre que quiser garantir que sua branch está atualizada com as últimas alterações do repositório remoto, execute:
-```bash
-git pull origin sua-branch
-```
-Substitua `sua-branch` pelo nome da sua branch.
-
