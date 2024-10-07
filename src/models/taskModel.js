@@ -34,7 +34,8 @@ export const Task = {
         tasks.status,
         tasks.priority,
         tasks.file_path,
-        users.name AS user_id, 
+        users.id AS user_id,
+        users.name AS user_name,
         users.user_photo, 
         categories.name AS category_id, 
         task_lists.name AS task_list_id
