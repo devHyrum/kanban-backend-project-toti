@@ -3,7 +3,6 @@ import { getTaskHistory, getTaskHistorybyId } from '../controllers/taskHistoryCo
 
 const router = express.Router()
 
-// Rota para obter o histórico de uma tarefa específica pelo ID
 router.get('/:id', getTaskHistorybyId)
 router.get('/', getTaskHistory)
 

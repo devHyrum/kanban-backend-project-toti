@@ -12,10 +12,8 @@ const storagePhotoUser = multer.diskStorage({
     cb(null, nomeDoArquivo)
   }
 })
-// Filtro para tipos de arquivos aceitos
 const imageFilter = (req, file, cb) => {
   const mimePermitidos = ['image/png', 'image/jpeg', 'image/gif', 'image/bmp', 'image/webp']
-
   if (mimePermitidos.includes(file.mimetype)) {
     return cb(null, true)
   } else {
@@ -25,7 +23,7 @@ const imageFilter = (req, file, cb) => {
 export const uploadImage = multer({ 
   storage: storagePhotoUser, 
   fileFilter: imageFilter, 
-  limits: { fileSize: 10 * 1024 * 1024 }  // Limite de tamanho de arquivo: 10MB
+  limits: { fileSize: 10 * 1024 * 1024 }
 })
 
 // Configuração de armazenamento para qualquer arquivo
@@ -38,13 +36,11 @@ const storageAnyFile = multer.diskStorage({
     cb(null, nomeDoArquivo)
   }
 })
-// Não há filtro de tipos de arquivo, qualquer arquivo será aceito. Na realidade pode ser apagado
 const fileFilter = (req, file, cb) => {
   cb(null, true)
 }
-
 export const uploadAnyFile = multer({ 
   storage: storageAnyFile, 
   fileFilter: fileFilter,
-  limits: { fileSize: 29 * 1024 * 1024 } // Limite de tamanho de arquivo: 29MB
+  limits: { fileSize: 29 * 1024 * 1024 }
 })

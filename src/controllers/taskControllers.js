@@ -30,36 +30,29 @@ export const getTaskById = async (req, res) => {
 export const createTask = async (req, res) => {
   try {
     const { title, description, due_date, status, priority, user_id, category_id, task_list_id } = req.body;
-    console.log(req.body); // Log dos dados recebidos no backend
-
     if (!title || title.trim() === '') {
       return res.status(400).json({ error: 'O título da tarefa é obrigatório' });
     }
 
     const task_file = req.file ? req.file.filename : null;
 
-    // Verifica se o user_id e o category_id foram enviados; se não, atribuir null
     const userId = user_id ? await Task.getIdFromName('users', user_id) : null;
     const categoryId = category_id ? await Task.getIdFromName('categories', category_id) : null;
-    
-    // Se task_list_id não for enviado ou for vazio, atribuir 'Para fazer'
     const taskListId = task_list_id ? await Task.getIdFromName('task_lists', task_list_id) : await Task.getIdFromName('task_lists', 'Para fazer');
 
-    // Se o taskListId não foi encontrado, retornar um erro
     if (!taskListId) {
       return res.status(400).json({ error: 'Lista de Tarefas inválida' });
     }
 
-    // Criar a nova tarefa com os IDs obtidos
     const updatedTask = await Task.createTask(
       title,
       description,
       due_date,
       status,
       priority,
-      userId,        // Pode ser null
-      categoryId,    // Pode ser null
-      taskListId,    // Sempre terá um valor válido
+      userId,
+      categoryId,
+      taskListId,
       task_file
     );
 
@@ -73,7 +66,7 @@ export const createTask = async (req, res) => {
   }
 };
 
-// Função para gerar a descrição das mudanças
+
 const generateChangeDescription = (oldTask, newTask) => {
   const changes = []
 
@@ -116,33 +109,26 @@ export const editTask = async (req, res) => {
     console.log(req.params)
     console.log(title, description, due_date, status, user_id, priority, category_id, task_list_id)
     
-    // Buscar IDs para user_id, category_id e task_list_id com base no nome enviado
     const userId = await Task.getIdFromName('users', user_id)
     const categoryId = await Task.getIdFromName('categories', category_id)
     const taskListId = await Task.getIdFromName('task_lists', task_list_id)
 
-    // Se algum dos IDs não foi encontrado, retornar um erro
     if (!userId || !categoryId || !taskListId) {
       return res.status(400).json({ error: 'Usuário, Categoria ou Lista de Tarefas inválidos' })
     }
 
-    // Primeiro, obtenha o usuário para saber a foto atual
     const oldFild = await Task.getTaskById(taskId )
-    // Buscar a tarefa antiga para verificar o arquivo antigo
     if (task_file) {
 
-    // Se houver uma nova imagem e o arquivo antigo for diferente, excluir o arquivo antigo
       if (oldFild.file_path && oldFild.file_path !== task_file) {
         const oldFilePath = path.join(taskFilePath, oldFild.file_path)
         
-        // Verifique se o arquivo antigo existe e delete-o
         if (fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath)
         }
       }
     }
 
-    // Criar a nova tarefa com os IDs obtidos
     const updatedTask = await Task.updateTask(
       taskId,
       title, 
@@ -153,17 +139,15 @@ export const editTask = async (req, res) => {
       userId, 
       categoryId, 
       taskListId, 
-      task_file || oldFild.file_path // Manter o arquivo antigo se não houver um novo
+      task_file || oldFild.file_path
     )
 
-    // Gerar a descrição das mudanças
     const changeDescription = generateChangeDescription(oldFild, { title, description, due_date, status, priority, task_file, user_id, category_id, task_list_id })
 
-    // Se houver mudanças, gravar no histórico
     if (changeDescription) {
       await TaskHistory.recordHistory({
         task_id: taskId ,
-        changed_by: myUserId, // ID do usuário autenticado que fez a mudança
+        changed_by: myUserId,
         change_description: changeDescription
       })
     }
@@ -182,15 +166,12 @@ export const editTask = async (req, res) => {
 export const deleteTask = async (req, res) => {
   try {
     const { id } = req.params
-    // Obtenha o usuário para saber qual foto está associada
     const task = await Task.getTaskById(id)
 
-    // Se houver uma foto associada, exclua-a
     if (task.file_path) {
       const photoPath = path.join(taskFilePath, task.file_path)
   
-      // Verifique se o arquivo existe e exclua-o
-      if (fs.existsSync(photoPath)) { // verificar oi motivo de não funcioanr
+      if (fs.existsSync(photoPath)) {
         fs.unlinkSync(photoPath)
       }
     }

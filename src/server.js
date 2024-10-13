@@ -41,5 +41,3 @@ app.use(errorHandler)
 app.use('*', (req, res) => res.end('USE: Não existe a rota'))
 
 app.listen(PORT, () => { console.log(`Servidor corrento na porta ${PORT}`) })
-
-// localhost:3000/users/2/image

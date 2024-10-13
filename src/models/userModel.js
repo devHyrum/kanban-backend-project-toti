@@ -36,7 +36,6 @@ export const User = {
   },
   
   update: async (id, fieldsToUpdate) => {
-    // Construa dinamicamente a query e os valores a serem atualizados
     const updates = [];
     const values = [];
   
@@ -45,11 +44,9 @@ export const User = {
       values.push(fieldsToUpdate[field]);
     }
   
-    values.push(id); // Adiciona o ID ao final para a condição WHERE
+    values.push(id);
   
     const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
-    // console.log('Query gerada:', query);
-    // console.log('Valores:', values);
     const result = await pool.query(query, values);
     return result;
   },

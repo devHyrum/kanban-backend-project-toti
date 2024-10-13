@@ -15,7 +15,6 @@ export const getTaskHistorybyId = async (req, res) => {
   try {
     const { id } = req.params
 
-    // Busca o histórico de mudanças de uma tarefa específica
     const history = await TaskHistory.getHistoryByTaskId(id)
 
     if (!history.length) {
